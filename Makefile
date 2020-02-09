@@ -5,6 +5,7 @@ SHELL := bash
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 CORES := $(shell nproc)
+MINUMUM_CODE_COVERAGE := 100
 
 .PHONY: show-help
 ## This help screen
@@ -29,8 +30,8 @@ test:
 	phpdbg -qrr ./vendor/bin/phpspec run --verbose
 	phpdbg -qrr $(shell command -v infection) \
 	       -j${CORES} \
-	       --min-msi=100 \
-	       --min-covered-msi=100 \
+	       --min-msi=${MINUMUM_CODE_COVERAGE} \
+	       --min-covered-msi=${MINUMUM_CODE_COVERAGE} \
 	       --test-framework=phpspec \
 	       --coverage=coverage
 
