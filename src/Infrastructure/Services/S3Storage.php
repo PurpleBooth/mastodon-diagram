@@ -32,7 +32,7 @@ class S3Storage implements StorageInterface
 
     private function generateKey(string $key): string
     {
-        $filteredKey = preg_replace('/[^a-z0-9\\.]/i', '', $key);
+        $filteredKey = preg_replace('/[^a-z0-9.]/i', '', $key);
 
         $keyHash = crc32($key);
 
