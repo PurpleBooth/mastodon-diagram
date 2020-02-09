@@ -1,4 +1,4 @@
-service: app
+service: mastodon-diagram
 
 custom:
   initialUrl: "https://mastodon.social"
@@ -37,14 +37,14 @@ provider:
                     - '/*'
     s3:
         responsesBucket:
-            name: ${self:custom.responsesBucket}
+            Ref: responseBucket
 
 plugins:
     - ./vendor/bref/bref
 
 functions:
-    function:
-        handler: index.php
+    poll:
+        handler: ./entrypoints/poll.php
         description: ''
         layers:
             - ${bref:layer.php-73}
@@ -59,7 +59,7 @@ package:
 
 resources:
   Resources:
-    myBucket:
+    responseBucket:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.responsesBucket}

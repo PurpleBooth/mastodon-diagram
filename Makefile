@@ -38,16 +38,21 @@ test:
 .PHONY: serverless-deploy
 ## Deploy the application
 serverless-deploy:
-	npx serverless deploy
+	npx serverless deploy && ( make serverless-run || make serverless-logs )
 
 .PHONY: serverless-run
 ## Run the severless application
 serverless-run:
-	npx serverless invoke -f function
+	npx serverless invoke -f poll
 
 
 .PHONY: serverless-logs
 ## Get the logs of the application
 serverless-logs:
-	npx serverless logs -f function
+	npx serverless logs -f poll
+
+.PHONY: serverless-remove
+## Get the logs of the application
+serverless-remove:
+	npx serverless remove
 
