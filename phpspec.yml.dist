@@ -1,0 +1,15 @@
+suites:
+  default:
+    namespace: PurpleBooth\MastodonDiagram
+    psr4_prefix: PurpleBooth\MastodonDiagram
+    spec_prefix: spec
+
+code_generation: true
+extensions:
+  FriendsOfPhpSpec\PhpSpec\CodeCoverage\CodeCoverageExtension:
+    format:
+      - xml
+      - html
+    output:
+      xml: coverage/phpspec-coverage-xml
+      html: coverage

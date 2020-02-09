@@ -1,0 +1,32 @@
+{
+    "name": "purplebooth/mastodon-diagram",
+    "description": "This draws pretty network diagrams from mastodon",
+    "type": "project",
+    "require-dev": {
+        "phpspec/phpspec": "^6.1",
+        "phpstan/phpstan": "^0.12.9",
+        "friends-of-phpspec/phpspec-code-coverage": "^4.3",
+        "phpstan/extension-installer": "^1.0"
+    },
+    "license": "GPL-3.0-or-later",
+    "autoload": {
+        "psr-4": {
+            "PurpleBooth\\MastodonDiagram\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "spec\\PurpleBooth\\MastodonDiagram\\": "spec/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Billie Thompson",
+            "email": "billie@billiecodes.com"
+        }
+    ],
+    "require": {
+        "bref/bref": "^0.5.14",
+        "symfony/http-client": "^5.0"
+    }
+}
