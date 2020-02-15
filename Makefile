@@ -18,11 +18,13 @@ lint:
 	composer validate
 	php-cs-fixer fix --allow-risky=yes --dry-run
 	./vendor/bin/phpstan analyse
+	( cd frontend && ng lint )
 
 .PHONY: fix
 ## Automatically fix any problems possible
 fix:
 	php-cs-fixer fix --allow-risky=yes
+	( cd frontend && ng lint --fix )
 
 .PHONY: test
 ## Run the tests
@@ -34,11 +36,14 @@ test:
 	       --min-covered-msi=${MINUMUM_CODE_COVERAGE} \
 	       --test-framework=phpspec \
 	       --coverage=coverage || ( cat infection.log && exit 1 )
+	( cd frontend && ng test --watch=false )
+	( cd frontend && ng e2e )
 
 .PHONY: serverless-deploy
 ## Deploy the application
 serverless-deploy:
-	npx serverless deploy && ( make serverless-run || make serverless-logs )
+	npx serverless deploy && ( make serverless-run || ( make serverless-logs && exit 1 ) )
+	( cd frontend && npm run build:serverless:deploy )
 
 .PHONY: serverless-run
 ## Run the severless application

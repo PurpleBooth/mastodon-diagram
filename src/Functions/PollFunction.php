@@ -7,7 +7,7 @@ use PurpleBooth\MastodonDiagram\Domain\Services\TootRepositoryInterface;
 
 class PollFunction
 {
-    const SUCCESS_RESPONSE = 'polled';
+    public const SUCCESS_RESPONSE = 'polled';
     /**
      * @var PublicTimelineResponseRepositoryInterface
      */
@@ -17,8 +17,10 @@ class PollFunction
      */
     private $tootRepository;
 
-    public function __construct(PublicTimelineResponseRepositoryInterface $storage, TootRepositoryInterface $tootRepository)
-    {
+    public function __construct(
+        PublicTimelineResponseRepositoryInterface $storage,
+        TootRepositoryInterface $tootRepository
+    ) {
         $this->storage = $storage;
         $this->tootRepository = $tootRepository;
     }

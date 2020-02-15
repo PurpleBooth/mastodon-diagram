@@ -2,14 +2,19 @@
 
 namespace PurpleBooth\MastodonDiagram\Model;
 
+use ArrayIterator;
+use function count;
+use Countable;
 use Iterator;
+use IteratorAggregate;
+use JsonException;
 
 /**
  * Class StoredPublicTimelineResponse.
  *
  * @implements \IteratorAggregate<int, StoredToot>
  */
-class StoredPublicTimelineResponse implements \IteratorAggregate, \Countable
+class StoredPublicTimelineResponse implements IteratorAggregate, Countable
 {
     private const JSON_MAX_DEPTH = 512;
     /**
@@ -24,18 +29,21 @@ class StoredPublicTimelineResponse implements \IteratorAggregate, \Countable
     /**
      * StoredPublicTimelineResponse constructor.
      *
-     * @param array<int, array<string, array<string,array<string,integer|string>|int|string>|int|string>> $rawData
+     * @param array<int, array<string, array<string,array<string,int|string>|int|string>|int|string>> $rawData
      */
     public function __construct(string $key, array $rawData)
     {
-        $this->storedToots = array_map(function ($rawToot) {
-            return new StoredToot($rawToot);
-        }, $rawData);
+        $this->storedToots = array_map(
+            function ($rawToot) {
+                return new StoredToot($rawToot);
+            },
+            $rawData
+        );
         $this->key = $key;
     }
 
     /**
-     * @throws \JsonException
+     * @throws JsonException
      *
      * @return self<StoredToot>
      */
@@ -58,11 +66,11 @@ class StoredPublicTimelineResponse implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @return \Iterator<int, StoredToot>
+     * @return Iterator<StoredToot>
      */
     public function getIterator(): Iterator
     {
-        return new \ArrayIterator($this->storedToots);
+        return new ArrayIterator($this->storedToots);
     }
 
     public function getKey(): string

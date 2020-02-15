@@ -28,6 +28,7 @@
     "require": {
         "bref/bref": "^0.5.14",
         "symfony/http-client": "^5.0",
-        "php": "^7.4.1"
+        "php": "^7.4.1",
+        "pkerrigan/xray": "^1"
     }
 }

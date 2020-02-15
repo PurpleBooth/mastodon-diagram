@@ -14,5 +14,7 @@ interface PublicTimelineResponseRepositoryInterface
     /**
      * @return StoredPublicTimelineResponse<StoredToot>
      */
-    public function retrieveTootStoredAggregate(S3PublicTimelineResponseKey $tootAggregateKey): StoredPublicTimelineResponse;
+    public function retrieveTootStoredAggregate(
+        S3PublicTimelineResponseKey $tootAggregateKey
+    ): StoredPublicTimelineResponse;
 }

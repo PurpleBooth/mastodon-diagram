@@ -3,6 +3,7 @@
 namespace PurpleBooth\MastodonDiagram\Infrastructure\Services;
 
 use Aws\S3\S3Client;
+use JsonException;
 use PurpleBooth\MastodonDiagram\Domain\Services\PublicTimelineResponseRepositoryInterface;
 use PurpleBooth\MastodonDiagram\Model\PublicTimelineResponse;
 use PurpleBooth\MastodonDiagram\Model\S3PublicTimelineResponseKey;
@@ -11,6 +12,9 @@ use PurpleBooth\MastodonDiagram\Model\StoredToot;
 
 class S3PublicTimelineResponseRepository implements PublicTimelineResponseRepositoryInterface
 {
+    private const S3_BODY = 'Body';
+    private const S3_KEY = 'Key';
+    private const S3_BUCKET = 'Bucket';
     /**
      * @var string
      */
@@ -34,15 +38,23 @@ class S3PublicTimelineResponseRepository implements PublicTimelineResponseReposi
     }
 
     /**
-     * @throws \JsonException
+     * @throws JsonException
      *
      * @return StoredPublicTimelineResponse<StoredToot>
      */
-    public function retrieveTootStoredAggregate(S3PublicTimelineResponseKey $tootAggregateKey): StoredPublicTimelineResponse
-    {
-        $response = $this->s3Client->getObject(['Bucket' => $this->bucket, 'Key' => $tootAggregateKey->getKey()]);
+    public function retrieveTootStoredAggregate(
+        S3PublicTimelineResponseKey $tootAggregateKey
+    ): StoredPublicTimelineResponse {
+        $response = $this->s3Client->getObject(
+            [
+                self::S3_BUCKET => $this->bucket,
+                self::S3_KEY => $tootAggregateKey->getKey(),
+            ]
+        );
 
-        return StoredPublicTimelineResponse::fromJson($tootAggregateKey->getKey(), $response['body']);
+        $storedResponse = $response[self::S3_BODY];
+
+        return StoredPublicTimelineResponse::fromJson($tootAggregateKey->getKey(), $storedResponse);
     }
 
     private function generateKey(string $key): string

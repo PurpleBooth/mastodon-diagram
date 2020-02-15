@@ -120,7 +120,7 @@ class S3PublicTimelineResponseRepositorySpec extends ObjectBehavior
             ['Bucket' => 'some-bucket', 'Key' => '7161ef05-httpsmastodon.social']
         )
             ->willReturn(
-                ['body' => '[{ "testing": true }]']
+                ['Body' => '[{ "testing": true }]']
             )
         ;
 

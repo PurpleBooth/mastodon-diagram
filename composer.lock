@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "91cbf3a6e3bea47eada8b4f019dfc7a5",
+    "content-hash": "fab4a3d03376970e17150322710f2253",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -547,6 +547,53 @@
                 "invoker"
             ],
             "time": "2017-03-20T19:28:22+00:00"
+        },
+        {
+            "name": "pkerrigan/xray",
+            "version": "v1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/patrickkerrigan/php-xray.git",
+                "reference": "8febd5a5902c83f8ac9cc732deb85ba241eea040"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/patrickkerrigan/php-xray/zipball/8febd5a5902c83f8ac9cc732deb85ba241eea040",
+                "reference": "8febd5a5902c83f8ac9cc732deb85ba241eea040",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Pkerrigan\\Xray\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Patrick Kerrigan",
+                    "homepage": "https://patrickkerrigan.uk/"
+                }
+            ],
+            "description": "A basic PHP instrumentation library for AWS X-Ray",
+            "keywords": [
+                "AWS X-Ray",
+                "X-Ray",
+                "apm",
+                "aws",
+                "tracing"
+            ],
+            "time": "2019-01-24T16:06:28+00:00"
         },
         {
             "name": "psr/container",

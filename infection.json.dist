@@ -3,7 +3,8 @@
     "source": {
         "directories": [
             "src"
-        ]
+        ],
+        "excludes": ["Functions/XRayFunctionDecorator.php"]
     },
     "phpUnit": {
         "customPath": ".\/vendor\/bin\/phpspec"

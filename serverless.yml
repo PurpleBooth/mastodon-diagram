@@ -8,8 +8,10 @@ custom:
   brefLoopMax: 10000
 
 provider:
-  tracing: true
   name: aws
+  tracing:
+    apiGateway: true
+    lambda: true
   region: us-east-1
   runtime: provided
   iamRoleStatements:
@@ -39,11 +41,21 @@ provider:
     - Effect: 'Allow'
       Action:
         - 's3:PutObject'
+        - 's3:GetObject'
       Resource:
         Fn::Join:
           - ''
           - - 'arn:aws:s3:::'
             - Ref: responseBucket
+            - '/*'
+    - Effect: 'Allow'
+      Action:
+        - 's3:PutObject'
+      Resource:
+        Fn::Join:
+          - ''
+          - - 'arn:aws:s3:::'
+            - Ref: analysisBucket
             - '/*'
 
 plugins:
@@ -53,7 +65,7 @@ functions:
   poll:
     handler: ./entrypoints/poll.php
     layers:
-      - ${bref:layer.php-73}
+      - ${bref:layer.php-74}
     environment:
       ANALYSIS_BUCKET: ${self:custom.analysisBucket}
       RESPONSE_BUCKET: ${self:custom.responsesBucket}
@@ -62,16 +74,21 @@ functions:
   countInteractions:
     handler: ./entrypoints/countInteractions.php
     layers:
-      - ${bref:layer.php-73}
+      - ${bref:layer.php-74}
+    environment:
+      ANALYSIS_BUCKET: ${self:custom.analysisBucket}
+      RESPONSE_BUCKET: ${self:custom.responsesBucket}
+      BREF_LOOP_MAX: ${self:custom.brefLoopMax}
     events:
       - s3:
+          event: s3:ObjectCreated:*
           bucket: ${self:custom.responsesBucket}
           existing: true
 
-# Exclude files from deployment
 package:
   exclude:
     - 'spec/**'
+    - 'frontend/**'
 
 resources:
   Resources:

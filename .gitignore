@@ -3,3 +3,5 @@
 /vendor
 /.serverless
 /infection.log
+node_modules/
+
