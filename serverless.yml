@@ -2,60 +2,76 @@ service: mastodon-diagram
 
 custom:
   initialUrl: "https://mastodon.social"
-  responsesBucket: "billie-talk-demo-tracing"
+  stage: ${opt:stage, self:provider.stage}
+  responsesBucket: "billie-talk-demo-tracing-${self:custom.stage}"
+  analysisBucket: "billie-talk-demo-analysis-${self:custom.stage}"
+  brefLoopMax: 10000
 
 provider:
-    name: aws
-    region: us-east-1
-    runtime: provided
-    iamRoleStatements:
-        - Effect: 'Allow'
-          Action:
-              - 's3:ListBucket'
-          Resource:
-              Fn::Join:
-                  - ''
-                  - - 'arn:aws:s3:::'
-                    - Ref: ServerlessDeploymentBucket
-        - Effect: 'Allow'
-          Action:
-              - 's3:PutObject'
-          Resource:
-              Fn::Join:
-                  - ''
-                  - - 'arn:aws:s3:::'
-                    - Ref: ServerlessDeploymentBucket
-                    - '/*'
-        - Effect: 'Allow'
-          Action:
-              - 's3:PutObject'
-          Resource:
-              Fn::Join:
-                  - ''
-                  - - 'arn:aws:s3:::'
-                    - "${self:custom.responsesBucket}"
-                    - '/*'
-    s3:
-        responsesBucket:
-            Ref: responseBucket
+  tracing: true
+  name: aws
+  region: us-east-1
+  runtime: provided
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "xray:PutTraceSegments"
+        - "xray:PutTelemetryRecords"
+      Resource:
+        - "*"
+    - Effect: 'Allow'
+      Action:
+        - 's3:ListBucket'
+      Resource:
+        Fn::Join:
+          - ''
+          - - 'arn:aws:s3:::'
+            - Ref: ServerlessDeploymentBucket
+    - Effect: 'Allow'
+      Action:
+        - 's3:PutObject'
+      Resource:
+        Fn::Join:
+          - ''
+          - - 'arn:aws:s3:::'
+            - Ref: ServerlessDeploymentBucket
+            - '/*'
+    - Effect: 'Allow'
+      Action:
+        - 's3:PutObject'
+      Resource:
+        Fn::Join:
+          - ''
+          - - 'arn:aws:s3:::'
+            - Ref: responseBucket
+            - '/*'
 
 plugins:
-    - ./vendor/bref/bref
+  - ./vendor/bref/bref
 
 functions:
-    poll:
-        handler: ./entrypoints/poll.php
-        description: ''
-        layers:
-            - ${bref:layer.php-73}
-        environment:
-            RESPONSE_BUCKET: ${self:custom.responsesBucket}
-            INITIAL_URL: ${self:custom.initialUrl}
+  poll:
+    handler: ./entrypoints/poll.php
+    layers:
+      - ${bref:layer.php-73}
+    environment:
+      ANALYSIS_BUCKET: ${self:custom.analysisBucket}
+      RESPONSE_BUCKET: ${self:custom.responsesBucket}
+      INITIAL_URL: ${self:custom.initialUrl}
+      BREF_LOOP_MAX: ${self:custom.brefLoopMax}
+  countInteractions:
+    handler: ./entrypoints/countInteractions.php
+    layers:
+      - ${bref:layer.php-73}
+    events:
+      - s3:
+          bucket: ${self:custom.responsesBucket}
+          existing: true
 
 # Exclude files from deployment
 package:
-    exclude:
-        - 'spec/**'
+  exclude:
+    - 'spec/**'
 
 resources:
   Resources:
@@ -63,3 +79,7 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.responsesBucket}
+    analysisBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.analysisBucket}

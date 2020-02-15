@@ -2,14 +2,14 @@
 
 namespace PurpleBooth\MastodonDiagram\Functions;
 
-use PurpleBooth\MastodonDiagram\Domain\Services\StorageInterface;
+use PurpleBooth\MastodonDiagram\Domain\Services\PublicTimelineResponseRepositoryInterface;
 use PurpleBooth\MastodonDiagram\Domain\Services\TootRepositoryInterface;
 
-class Poll
+class PollFunction
 {
     const SUCCESS_RESPONSE = 'polled';
     /**
-     * @var StorageInterface
+     * @var PublicTimelineResponseRepositoryInterface
      */
     private $storage;
     /**
@@ -17,7 +17,7 @@ class Poll
      */
     private $tootRepository;
 
-    public function __construct(StorageInterface $storage, TootRepositoryInterface $tootRepository)
+    public function __construct(PublicTimelineResponseRepositoryInterface $storage, TootRepositoryInterface $tootRepository)
     {
         $this->storage = $storage;
         $this->tootRepository = $tootRepository;
@@ -26,7 +26,7 @@ class Poll
     public function __invoke(): string
     {
         $response = $this->tootRepository->retrievePublicTimeline();
-        $this->storage->upload($response);
+        $this->storage->store($response);
 
         return self::SUCCESS_RESPONSE;
     }

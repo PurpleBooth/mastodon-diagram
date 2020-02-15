@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Aws\S3\S3Client;
-use PurpleBooth\MastodonDiagram\Functions\Poll;
+use PurpleBooth\MastodonDiagram\Functions\PollFunction;
 use PurpleBooth\MastodonDiagram\Infrastructure\Services\ApiTootRepository;
-use PurpleBooth\MastodonDiagram\Infrastructure\Services\S3Storage;
+use PurpleBooth\MastodonDiagram\Infrastructure\Services\S3PublicTimelineResponseRepository;
 use Symfony\Component\HttpClient\HttpClient;
 
 require __DIR__.'/../vendor/autoload.php';
@@ -29,8 +29,8 @@ $region = $getEnvOrExcept('AWS_REGION');
 
 $initialHost = $getEnvOrExcept('INITIAL_URL');
 
-return new Poll(
-    new S3Storage(
+return new PollFunction(
+    new S3PublicTimelineResponseRepository(
         $bucket,
         new S3Client(
             [

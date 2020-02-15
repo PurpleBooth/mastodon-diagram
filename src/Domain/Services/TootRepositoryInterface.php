@@ -2,9 +2,9 @@
 
 namespace PurpleBooth\MastodonDiagram\Domain\Services;
 
-use PurpleBooth\MastodonDiagram\Domain\Model\TootAggregateInterface;
+use PurpleBooth\MastodonDiagram\Model\PublicTimelineResponse;
 
 interface TootRepositoryInterface
 {
-    public function retrievePublicTimeline(): TootAggregateInterface;
+    public function retrievePublicTimeline(): PublicTimelineResponse;
 }

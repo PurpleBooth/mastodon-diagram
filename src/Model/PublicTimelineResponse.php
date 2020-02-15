@@ -1,27 +1,33 @@
 <?php
 
-namespace PurpleBooth\MastodonDiagram\Domain\Model;
+namespace PurpleBooth\MastodonDiagram\Model;
 
-class TootAggregate implements TootAggregateInterface
+/**
+ * The response from a request to a public timeline.
+ */
+class PublicTimelineResponse
 {
     /**
      * @var string
      */
-    private $identifier;
+    private $key;
     /**
      * @var string
      */
     private $rawResponse;
 
+    /**
+     * Construct the class.
+     */
     public function __construct(string $identifier, string $rawResponse)
     {
-        $this->identifier = $identifier;
+        $this->key = $identifier;
         $this->rawResponse = $rawResponse;
     }
 
-    public function getIdentifier(): string
+    public function getKey(): string
     {
-        return $this->identifier;
+        return $this->key;
     }
 
     public function getRawResponse(): string

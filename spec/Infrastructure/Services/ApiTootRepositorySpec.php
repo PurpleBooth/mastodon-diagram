@@ -3,9 +3,9 @@
 namespace spec\PurpleBooth\MastodonDiagram\Infrastructure\Services;
 
 use PhpSpec\ObjectBehavior;
-use PurpleBooth\MastodonDiagram\Domain\Model\TootAggregate;
 use PurpleBooth\MastodonDiagram\Domain\Services\TootRepositoryInterface;
 use PurpleBooth\MastodonDiagram\Infrastructure\Services\ApiTootRepository;
+use PurpleBooth\MastodonDiagram\Model\PublicTimelineResponse;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 
@@ -35,7 +35,7 @@ class ApiTootRepositorySpec extends ObjectBehavior
             $response
         );
         $response->getContent()->willReturn('source');
-        $tootAggregate = new TootAggregate('https://mastodon.social', 'source');
+        $tootAggregate = new PublicTimelineResponse('https://mastodon.social', 'source');
         $this->retrievePublicTimeline()->shouldBeLike($tootAggregate);
     }
 }

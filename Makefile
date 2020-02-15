@@ -33,7 +33,7 @@ test:
 	       --min-msi=${MINUMUM_CODE_COVERAGE} \
 	       --min-covered-msi=${MINUMUM_CODE_COVERAGE} \
 	       --test-framework=phpspec \
-	       --coverage=coverage
+	       --coverage=coverage || ( cat infection.log && exit 1 )
 
 .PHONY: serverless-deploy
 ## Deploy the application
