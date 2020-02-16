@@ -8,6 +8,7 @@ use PurpleBooth\MastodonDiagram\Model\TootAnalysis;
 
 class S3AnalysisRepository implements AnalysisRepositoryInterface
 {
+    private const KEY_PREFIX = 'public/';
     /**
      * @var S3Client
      */
@@ -25,7 +26,7 @@ class S3AnalysisRepository implements AnalysisRepositoryInterface
 
     public function store(TootAnalysis $analysis): void
     {
-        $key = $analysis->getKey();
+        $key = sprintf('%s%s', self::KEY_PREFIX, $analysis->getKey());
 
         $this->s3Client->upload($this->bucket, $key, json_encode($analysis));
     }

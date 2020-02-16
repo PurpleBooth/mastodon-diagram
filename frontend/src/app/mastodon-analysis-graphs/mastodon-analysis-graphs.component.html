@@ -1,0 +1,12 @@
+<div class="graph" *ngFor="let pieChart of pieCharts">
+  <h2>{{pieChart.name}}</h2>
+  <canvas baseChart
+          [data]="pieChart.pieChartData"
+          [labels]="pieChart.pieChartLabels"
+          [chartType]="pieChartType"
+          [options]="pieChartOptions"
+          [plugins]="pieChartPlugins"
+          [colors]="pieChartColors"
+          [legend]="pieChartLegend">
+  </canvas>
+</div>

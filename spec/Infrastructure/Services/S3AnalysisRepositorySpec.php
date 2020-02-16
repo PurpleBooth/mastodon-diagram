@@ -27,7 +27,7 @@ class S3AnalysisRepositorySpec extends ObjectBehavior
 
     public function it_creates_a_nice_unique_slug(S3Client $s3Client): void
     {
-        $s3Client->upload('some-bucket', '7161ef05-httpsmastodon.social', '{"testing":2}')
+        $s3Client->upload('some-bucket', 'public/7161ef05-httpsmastodon.social', '{"testing":2}')
             ->shouldBeCalled()
         ;
         $this->store(new TootAnalysis('7161ef05-httpsmastodon.social', ['testing' => 2]));

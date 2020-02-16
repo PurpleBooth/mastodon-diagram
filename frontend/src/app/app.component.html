@@ -315,17 +315,7 @@
 </div>
 
 <div class="content" role="main">
-  <div class="graph">
-    <canvas baseChart
-            [data]="pieChartData"
-            [labels]="pieChartLabels"
-            [chartType]="pieChartType"
-            [options]="pieChartOptions"
-            [plugins]="pieChartPlugins"
-            [colors]="pieChartColors"
-            [legend]="pieChartLegend">
-    </canvas>
-  </div>
+  <app-mastodon-analysis-graphs></app-mastodon-analysis-graphs>
 </div>
 
 

@@ -4,7 +4,7 @@ custom:
   initialUrl: "https://mastodon.social"
   stage: ${opt:stage, self:provider.stage}
   responsesBucket: "billie-talk-demo-tracing-${self:custom.stage}"
-  analysisBucket: "billie-talk-demo-analysis-${self:custom.stage}"
+  analysisBucket: "billie-talk-demo-analysis-${self:custom.stage}production-production"
   brefLoopMax: 10000
 
 provider:
@@ -55,7 +55,7 @@ provider:
         Fn::Join:
           - ''
           - - 'arn:aws:s3:::'
-            - Ref: analysisBucket
+            - ${self:custom.analysisBucket}
             - '/*'
 
 plugins:
@@ -96,7 +96,3 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.responsesBucket}
-    analysisBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: ${self:custom.analysisBucket}

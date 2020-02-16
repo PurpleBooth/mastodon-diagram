@@ -1,21 +1,21 @@
 {
-	"hosting": {
-		"S3AndCloudFront": {
-			"service": "S3AndCloudFront",
-			"providerPlugin": "awscloudformation"
-		}
-	},
-	"auth": {
-		"mastodondiagramea8869ee": {
-			"service": "Cognito",
-			"providerPlugin": "awscloudformation",
-			"dependsOn": []
-		}
-	},
-	"storage": {
-		"MastodonDiagramFrontend": {
-			"service": "S3",
-			"providerPlugin": "awscloudformation"
-		}
-	}
+    "hosting": {
+        "S3AndCloudFront": {
+            "service": "S3AndCloudFront",
+            "providerPlugin": "awscloudformation"
+        }
+    },
+    "auth": {
+        "mastodondiagramea8869ee": {
+            "service": "Cognito",
+            "providerPlugin": "awscloudformation",
+            "dependsOn": []
+        }
+    },
+    "storage": {
+        "MastodonDiagramFrontend": {
+            "service": "S3",
+            "providerPlugin": "awscloudformation"
+        }
+    }
 }

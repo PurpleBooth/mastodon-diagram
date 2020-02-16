@@ -13,11 +13,6 @@ describe('workspace-project App', () => {
     expect(page.getTitleText()).toEqual('Welcome to frontend');
   });
 
-  it('A graph with all the toots on', () => {
-    page.navigateTo();
-    expect(page.getGraphIsDisplayed()).toBeTruthy();
-  });
-
   afterEach(async () => {
     // Assert that there are no errors emitted from the browser
     const logs = await browser.manage().logs().get(logging.Type.BROWSER);

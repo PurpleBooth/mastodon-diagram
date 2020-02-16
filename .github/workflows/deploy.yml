@@ -1,7 +1,5 @@
 on:
-  push:
-    branches:
-      - master
+  push: ~
   schedule:
     - cron:  '0 * * * *'
 jobs:
@@ -9,6 +7,23 @@ jobs:
     name: test
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - uses: shivammathur/setup-php@v1
         with:
           php-version: '7.4'
@@ -28,10 +43,9 @@ jobs:
           curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
           unzip awscli-bundle.zip
           sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
-          aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
+          aws configure set aws_access_key_id "$AWS_ACCESS_KEY"
           aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
           aws configure set default.region "$AWS_DEFAULT_REGION"
-      - uses: actions/checkout@v2
       - run: composer install
       - run: ( cd frontend && npm ci )
       - name: amplify init && amplify push
@@ -46,8 +60,6 @@ jobs:
                                 "profileName": "default"  \
                               } \
                             }'
-            amplify add auth
-            amplify add storage
             amplify push
           )
       - run: make lint
@@ -57,3 +69,5 @@ jobs:
           chromedriver --url-base=/wd/hub &
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
           make test
+      - run: make deploy
+        if: github.ref == 'refs/heads/master'
