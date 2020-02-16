@@ -15,8 +15,8 @@ jobs:
           php-version: '7.4'
           coverage: none
       - uses: actions/setup-node@v1
-      - run: wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O /usr/local/bin/php-cs-fixer
-      - run: chmod +x /usr/local/bin/php-cs-fixer
+      - run: sudo wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O /usr/local/bin/php-cs-fixer
+      - run: sudo chmod +x /usr/local/bin/php-cs-fixer
       - run: composer install
       - run: make lint-php
       - run: make test-php
