@@ -19,13 +19,22 @@ jobs:
       - run: sudo chmod +x /usr/local/bin/php-cs-fixer
       - run: npm install -g @angular/cli
       - run: npm install -g @aws-amplify/cli
+      - name: aws configure
+        env:
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
+        run: |
+          curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+          unzip awscli-bundle.zip
+          sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+          aws configure set aws_access_key_id "$AWS_ACCESS_KEY_ID"
+          aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
+          aws configure set default.region "$AWS_DEFAULT_REGION"
       - uses: actions/checkout@v2
       - run: composer install
       - run: ( cd frontend && npm ci )
       - name: amplify init && amplify push
-        env:
-          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
           (
             cd frontend
@@ -33,10 +42,8 @@ jobs:
                          --amplify '{ "envName": "production" }' \
                          --providers '{
                               "amplify-provider-awscloudformation": { \
-                                "useProfile": false,
-                                "accessKeyId": "$AWS_ACCESS_KEY",  \
-                                "secretAccessKey": "$AWS_SECRET_ACCESS_KEY",  \
-                                "region": "$AWS_DEFAULT_REGION"
+                                "useProfile": true,
+                                "profileName": "default"  \
                               } \
                             }'
             amplify add auth
