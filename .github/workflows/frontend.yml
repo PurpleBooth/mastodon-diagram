@@ -26,6 +26,7 @@ jobs:
           (
             cd frontend
             export PATH=$(npm bin):$PATH
+            amplify init
             amplify push
           )
       - run: make lint-frontend
