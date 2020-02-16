@@ -34,14 +34,14 @@ return new XRayFunctionDecorator(
     'poll',
     new PollFunction(
         new S3PublicTimelineResponseRepository(
-        $bucket,
-        new S3Client(
-            [
-                'region' => $region,
-                'version' => '2006-03-01',
-            ]
-        )
-    ),
+            $bucket,
+            new S3Client(
+                [
+                    'region' => $region,
+                    'version' => '2006-03-01',
+                ]
+            )
+        ),
         new ApiTootRepository($initialHost, (new HttpClient())::create())
     )
 );
