@@ -39,6 +39,8 @@ jobs:
                                 "secretAccessKey": "$AWS_SECRET_ACCESS_KEY",  \
                               } \
                             }'
+            amplify add auth
+            amplify add storage
             amplify push
           )
       - run: make lint
