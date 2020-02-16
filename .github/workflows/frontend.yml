@@ -19,6 +19,7 @@ jobs:
       - run: sudo chmod +x /usr/local/bin/php-cs-fixer
       - run: npm install -g @angular/cli
       - run: composer install
+      - run: ( cd frontend && npm ci )
       - run: make lint-frontend
       - run: make test-frontend
       - run: make amplify-deploy
