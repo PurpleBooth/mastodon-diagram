@@ -23,9 +23,9 @@ jobs:
       - run: ( cd frontend && npm ci )
       - run: |
           (
-            cd frontend \
+            cd frontend
             export PATH=$(npm bin):$PATH
-            && amplify push
+            amplify push
           )
       - run: make lint
       - run: |
