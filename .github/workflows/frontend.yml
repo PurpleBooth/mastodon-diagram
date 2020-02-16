@@ -17,6 +17,7 @@ jobs:
       - run: sudo wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O /usr/local/bin/php-cs-fixer
       - run: sudo chmod +x /usr/local/bin/php-cs-fixer
       - run: npm install -g @angular/cli
+      - run: npm install -g @aws-amplify/cli
       ##
       - uses: actions/checkout@v2
       ##
