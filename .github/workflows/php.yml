@@ -4,14 +4,17 @@ on:
       - master
   schedule:
     - cron:  '0 * * * *'
-steps:
-  - uses: actions/checkout@v2
-  - uses: shivammathur/setup-php@v1
-    with:
-      php-version: '7.4'
-      coverage: none
-  - uses: actions/setup-node@v1
-  - run: composer install
-  - run: make lint-php
-  - run: make test-php
-  - run: make serverless-deploy
+jobs:
+  build:
+    name: serverless-deploy
+    steps:
+      - uses: actions/checkout@v2
+      - uses: shivammathur/setup-php@v1
+        with:
+          php-version: '7.4'
+          coverage: none
+      - uses: actions/setup-node@v1
+      - run: composer install
+      - run: make lint-php
+      - run: make test-php
+      - run: make serverless-deploy
