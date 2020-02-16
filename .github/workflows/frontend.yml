@@ -9,7 +9,6 @@ jobs:
     name: amplify-deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - uses: shivammathur/setup-php@v1
         with:
           php-version: '7.4'
@@ -18,8 +17,16 @@ jobs:
       - run: sudo wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O /usr/local/bin/php-cs-fixer
       - run: sudo chmod +x /usr/local/bin/php-cs-fixer
       - run: npm install -g @angular/cli
+      ##
+      - uses: actions/checkout@v2
+      ##
       - run: composer install
       - run: ( cd frontend && npm ci )
       - run: make lint-frontend
-      - run: make test-frontend
+      - run: |
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
+          make test-frontend
+          
       - run: make amplify-deploy

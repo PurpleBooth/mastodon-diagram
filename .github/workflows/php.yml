@@ -9,7 +9,7 @@ jobs:
     name: serverless-deploy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      ## Env Setup
       - uses: shivammathur/setup-php@v1
         with:
           php-version: '7.4'
@@ -17,6 +17,9 @@ jobs:
       - uses: actions/setup-node@v1
       - run: sudo wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O /usr/local/bin/php-cs-fixer
       - run: sudo chmod +x /usr/local/bin/php-cs-fixer
+      ## Checkout
+      - uses: actions/checkout@v2
+      ## Tests
       - run: composer install
       - run: make lint-php
       - run: make test-php
