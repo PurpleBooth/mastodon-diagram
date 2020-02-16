@@ -30,7 +30,6 @@ jobs:
         run: |
           (
             cd frontend
-            export PATH=$(npm bin):$PATH
             amplify init --yes \
                          --amplify '{ "envName": "production" }' \
                          --providers '{
