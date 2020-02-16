@@ -43,7 +43,7 @@ test:
 ## Deploy the application
 serverless-deploy:
 	npx serverless deploy && ( make serverless-run || ( make serverless-logs && exit 1 ) )
-	( cd frontend && npm run build:serverless:deploy )
+	( cd frontend && amplify publish )
 
 .PHONY: serverless-run
 ## Run the severless application

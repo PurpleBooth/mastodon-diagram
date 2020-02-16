@@ -1,0 +1,20 @@
+{
+    "production": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-mastodon-diagram-production-212127-authRole",
+            "UnauthRoleArn": "arn:aws:iam::654281046572:role/amplify-mastodon-diagram-production-212127-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::654281046572:role/amplify-mastodon-diagram-production-212127-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "amplify-mastodon-diagram-production-212127-deployment",
+            "UnauthRoleName": "amplify-mastodon-diagram-production-212127-unauthRole",
+            "StackName": "amplify-mastodon-diagram-production-212127",
+            "StackId": "arn:aws:cloudformation:us-east-1:654281046572:stack/amplify-mastodon-diagram-production-212127/c0c5c420-5030-11ea-a93c-0abd62a7624a",
+            "AmplifyAppId": "d1oso2w0sq4bxb"
+        },
+        "categories": {
+            "auth": {
+                "mastodondiagramea8869ee": {}
+            }
+        }
+    }
+}
