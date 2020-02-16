@@ -22,11 +22,12 @@ jobs:
       ##
       - run: composer install
       - run: ( cd frontend && npm ci )
+      - run: ( cd frontend && amplify push )
       - run: make lint-frontend
       - run: |
           export DISPLAY=:99
           chromedriver --url-base=/wd/hub &
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
           make test-frontend
-          
+
       - run: make amplify-deploy
