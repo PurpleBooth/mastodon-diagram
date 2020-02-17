@@ -38,7 +38,7 @@ fix:
 .PHONY: build-frontend
 ## Build the frontend
 build-frontend:
-	( cd frontend && ng build )
+	( cd frontend && npm run-script build:browser:prod )
 
 .PHONY: test
 ## Run the tests
