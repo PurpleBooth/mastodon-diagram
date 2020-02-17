@@ -3,15 +3,14 @@
 set -euo pipefail
 
 cleanup() {
-        local pids=$(jobs -pr)
-        [ -n "$pids" ] && kill $pids
+  jobs -pr | xargs kill
 }
 trap "cleanup" INT QUIT TERM EXIT SIGINT SIGTERM EXIT
 
-( cd frontend && amplify mock ) &
+(cd frontend && amplify mock) &
 
-until curl -f "http://localhost:20005" ; do
+until curl -f "http://localhost:20005"; do
   sleep 1
 done
 
-( cd frontend && echo ng e2e )
+(cd frontend && echo ng e2e)
