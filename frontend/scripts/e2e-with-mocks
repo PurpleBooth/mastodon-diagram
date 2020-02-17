@@ -13,4 +13,4 @@ until curl -f "http://localhost:20005"; do
   sleep 1
 done
 
-(cd frontend && echo ng e2e)
+(cd frontend && npm run-script e2e)

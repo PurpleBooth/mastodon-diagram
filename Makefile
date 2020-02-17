@@ -27,13 +27,13 @@ lint-php:
 .PHONY: lint-frontend
 ## Check for style and static analysis problems
 lint-frontend:
-	( cd frontend && ng lint )
+	( cd frontend && npm run-script lint )
 
 .PHONY: fix
 ## Automatically fix any problems possible
 fix:
 	php-cs-fixer fix --allow-risky=yes
-	( cd frontend && ng lint --fix )
+	( cd frontend && npm run-script lint -- --fix )
 
 .PHONY: build-frontend
 ## Build the frontend
@@ -58,7 +58,7 @@ test-php:
 .PHONY: test-frontend
 ## Run the tests frontend
 test-frontend: build-frontend
-	( cd frontend && ng test --watch=false )
+	( cd frontend && npm run-script test -- --watch=false )
 	frontend/scripts/e2e-with-mocks
 
 .PHONY: deploy
