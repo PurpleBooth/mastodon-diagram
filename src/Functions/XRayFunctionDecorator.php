@@ -4,6 +4,7 @@ namespace PurpleBooth\MastodonDiagram\Functions;
 
 use Bref\Context\Context;
 use Exception;
+use Pkerrigan\Xray\HttpSegment;
 use Pkerrigan\Xray\Submission\DaemonSegmentSubmitter;
 use Pkerrigan\Xray\Trace;
 
@@ -36,6 +37,7 @@ class XRayFunctionDecorator
      */
     public function __invoke($event, Context $context): ?string
     {
+        echo $context->getTraceId();
         $this->startTrace($context->getTraceId());
         $errorState = null;
         $rethrownException = null;
