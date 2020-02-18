@@ -46,7 +46,7 @@ jobs:
           aws configure set aws_access_key_id "$AWS_ACCESS_KEY"
           aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
           aws configure set default.region "$AWS_DEFAULT_REGION"
-      - run: composer install
+      - run: composer install -a
       - run: ( cd frontend && npm ci )
       - name: amplify init && amplify push
         run: |
@@ -69,5 +69,6 @@ jobs:
           chromedriver --url-base=/wd/hub &
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
           make test
-      - run: make deploy
+      - run: |
+          make clean build deploy
         if: github.ref == 'refs/heads/master'

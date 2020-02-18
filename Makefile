@@ -35,10 +35,28 @@ fix:
 	php-cs-fixer fix --allow-risky=yes
 	( cd frontend && npm run-script lint -- --fix )
 
+.PHONY: build
+# Build the application
+build: build-frontend
+
 .PHONY: build-frontend
 ## Build the frontend
 build-frontend:
 	( cd frontend && npm run-script build:browser:prod )
+
+.PHONY: clean
+## Delete built objects
+clean: clean-frontend clean-php
+
+.PHONY: clean
+## Delete built objects
+clean-frontend:
+	rm -rf frontend/dist
+
+.PHONY: clean-php
+## Delete built objects
+clean-php:
+	rm -rf .serverless coverage node_modules .php_cs.cache infection.log
 
 .PHONY: test
 ## Run the tests
@@ -63,30 +81,30 @@ test-frontend: build-frontend
 
 .PHONY: deploy
 ## Deploy the frontend
-deploy: amplify-deploy serverless-deploy
+deploy: deploy-frontend deploy-php
 
-.PHONY: amplify-deploy
+.PHONY: deploy-frontend
 ## Deploy the frontend
-amplify-deploy:
+deploy-frontend:
 	( cd frontend && amplify publish )
 
-.PHONY: serverless-deploy
+.PHONY: deploy-php
 ## Deploy the application
-serverless-deploy:
-	npx serverless deploy && ( make serverless-run || ( make serverless-logs && exit 1 ) )
+deploy-php:
+	npx serverless deploy && ( make run-php || ( make logs-php && exit 1 ) )
 
-.PHONY: serverless-run
+.PHONY: run-php
 ## Run the severless application
-serverless-run:
+run-php:
 	npx serverless invoke -f poll
 
-.PHONY: serverless-logs
+.PHONY: logs-php
 ## Get the logs of the application
-serverless-logs:
+logs-php:
 	npx serverless logs -f poll
 
-.PHONY: serverless-remove
+.PHONY: remove-deploy-php
 ## Get the logs of the application
-serverless-remove:
+remove-deploy-php:
 	npx serverless remove
 
