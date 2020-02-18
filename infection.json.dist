@@ -3,10 +3,6 @@
     "source": {
         "directories": [
             "src"
-        ],
-        "excludes": [
-            "Functions/XRayFunctionDecorator.php",
-            "Infrastructure/Services/XRayHttpClient.php"
         ]
     },
     "phpUnit": {

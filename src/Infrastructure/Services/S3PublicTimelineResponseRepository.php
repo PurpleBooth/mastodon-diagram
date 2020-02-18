@@ -23,18 +23,34 @@ class S3PublicTimelineResponseRepository implements PublicTimelineResponseReposi
      * @var S3Client
      */
     private $s3Client;
+    /**
+     * @var S3MetaDataGenerator
+     */
+    private S3MetaDataGenerator $metaDataHelper;
+    /**
+     * @var PostRetrieveS3MetadataHook
+     */
+    private PostRetrieveS3MetadataHook $s3MetadataHook;
 
-    public function __construct(string $bucket, S3Client $s3Client)
+    public function __construct(string $bucket, S3Client $s3Client, S3MetaDataGenerator $metaDataGenerator, PostRetrieveS3MetadataHook $s3MetadataHook)
     {
         $this->bucket = $bucket;
         $this->s3Client = $s3Client;
+        $this->metaDataHelper = $metaDataGenerator;
+        $this->s3MetadataHook = $s3MetadataHook;
     }
 
     public function store(PublicTimelineResponse $toots): void
     {
         $key = $toots->getKey();
 
-        $this->s3Client->upload($this->bucket, $this->generateKey($key), $toots->getRawResponse());
+        $this->s3Client->upload(
+            $this->bucket,
+            $this->generateKey($key),
+            $toots->getRawResponse(),
+            'private',
+            ['Metadata' => ($this->metaDataHelper)()]
+        );
     }
 
     /**
@@ -51,6 +67,7 @@ class S3PublicTimelineResponseRepository implements PublicTimelineResponseReposi
                 self::S3_KEY => $tootAggregateKey->getKey(),
             ]
         );
+        ($this->s3MetadataHook)($response['Metadata']);
 
         $storedResponse = $response[self::S3_BODY];
 

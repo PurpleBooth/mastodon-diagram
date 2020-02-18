@@ -13,14 +13,19 @@ class XRayFunctionDecorator
      */
     private $function;
     private string $name;
+    /**
+     * @var Trace
+     */
+    private Trace $trace;
 
     /**
      * XRayFunctionDecorator constructor.
      */
-    public function __construct(string $name, callable $function)
+    public function __construct(Trace $trace, string $name, callable $function)
     {
         $this->function = $function;
         $this->name = $name;
+        $this->trace = $trace;
     }
 
     /**
@@ -47,7 +52,7 @@ class XRayFunctionDecorator
 
     private function startTrace(): void
     {
-        $trace = Trace::getInstance()
+        $trace = $this->trace
             ->setTraceHeader($this->getTraceId())
             ->setName($this->name)
         ;
@@ -100,7 +105,7 @@ class XRayFunctionDecorator
 
     private function endTrace(bool $error): void
     {
-        $trace = Trace::getInstance()
+        $trace = $this->trace
             ->end()
             ->setFault($error)
         ;

@@ -3,12 +3,15 @@
 declare(strict_types=1);
 
 use Aws\S3\S3Client;
+use Pkerrigan\Xray\Trace;
 use PurpleBooth\MastodonDiagram\Domain\Services\TootAnalyser;
 use PurpleBooth\MastodonDiagram\Functions\CountInteractionsFunction;
 use PurpleBooth\MastodonDiagram\Functions\XRayFunctionDecorator;
 use PurpleBooth\MastodonDiagram\Infrastructure\Handlers\CountInteractionsS3Handler;
 use PurpleBooth\MastodonDiagram\Infrastructure\Services\S3AnalysisRepository;
 use PurpleBooth\MastodonDiagram\Infrastructure\Services\S3PublicTimelineResponseRepository;
+use PurpleBooth\MastodonDiagram\Infrastructure\Services\XRayS3MetaDataGenerator;
+use PurpleBooth\MastodonDiagram\Infrastructure\Services\XRayS3MetaDataHook;
 
 require __DIR__.'/../vendor/autoload.php';
 
@@ -32,6 +35,7 @@ $region = $getEnvOrExcept('AWS_REGION');
 
 return new CountInteractionsS3Handler(
     new XRayFunctionDecorator(
+        Trace::getInstance(),
         'countInteractions',
         new CountInteractionsFunction(
             new S3PublicTimelineResponseRepository(
@@ -41,6 +45,12 @@ return new CountInteractionsS3Handler(
                         'region' => $region,
                         'version' => '2006-03-01',
                     ]
+                ),
+                new XRayS3MetaDataGenerator(
+                    Trace::getInstance()
+                ),
+                new XRayS3MetaDataHook(
+                    Trace::getInstance()
                 )
             ),
             new TootAnalyser(),

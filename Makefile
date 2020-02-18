@@ -32,8 +32,16 @@ lint-frontend:
 
 .PHONY: fix
 ## Automatically fix any problems possible
-fix:
+fix: fix-php fix-frontend
+
+.PHONY: fix-php
+## Automatically fix any problems possible
+fix-php:
 	php-cs-fixer fix --allow-risky=yes
+
+.PHONY: fix-frontend
+## Automatically fix any problems possible
+fix-frontend:
 	( cd frontend && npm run-script lint -- --fix )
 
 .PHONY: build

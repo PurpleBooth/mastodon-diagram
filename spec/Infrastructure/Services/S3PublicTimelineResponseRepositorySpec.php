@@ -6,6 +6,8 @@ use Aws\S3\S3Client;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use PurpleBooth\MastodonDiagram\Domain\Services\PublicTimelineResponseRepositoryInterface;
+use PurpleBooth\MastodonDiagram\Infrastructure\Services\PostRetrieveS3MetadataHook;
+use PurpleBooth\MastodonDiagram\Infrastructure\Services\S3MetaDataGenerator;
 use PurpleBooth\MastodonDiagram\Infrastructure\Services\S3PublicTimelineResponseRepository;
 use PurpleBooth\MastodonDiagram\Model\PublicTimelineResponse;
 use PurpleBooth\MastodonDiagram\Model\S3PublicTimelineResponseKey;
@@ -82,9 +84,12 @@ class S3PublicTimelineResponseRepositorySpec extends ObjectBehavior
     "visibility": "public"
   }]';
 
-    public function let(S3Client $s3Client)
-    {
-        $this->beConstructedWith('some-bucket', $s3Client);
+    public function let(
+        S3Client $s3Client,
+        PostRetrieveS3MetadataHook $postRetrieveS3MetadataHook,
+        S3MetaDataGenerator $s3MetaDataGenerator
+    ) {
+        $this->beConstructedWith('some-bucket', $s3Client, $s3MetaDataGenerator, $postRetrieveS3MetadataHook);
     }
 
     public function it_is_initializable(): void
@@ -97,38 +102,53 @@ class S3PublicTimelineResponseRepositorySpec extends ObjectBehavior
         $this->shouldImplement(PublicTimelineResponseRepositoryInterface::class);
     }
 
-    public function it_uploads_to_s3(S3Client $s3Client): void
+    public function it_uploads_to_s3(S3Client $s3Client, S3MetaDataGenerator $s3MetaDataGenerator): void
     {
-        $s3Client->upload('some-bucket', Argument::type('string'), 'testing')
+        $s3MetaDataGenerator->__invoke()->willReturn(['example' => 'a']);
+        $s3Client->upload(
+            'some-bucket',
+            Argument::type('string'),
+            'testing',
+            'private',
+            ['Metadata' => ['example' => 'a']]
+        )
             ->shouldBeCalled()
         ;
         $this->store(new PublicTimelineResponse('https://mastodon.social', 'testing'));
     }
 
-    public function it_escapes_the_name_of_the_bucket_and_keeps_it_readable(S3Client $s3Client): void
+    public function it_escapes_the_name_of_the_bucket_and_keeps_it_readable(S3Client $s3Client, S3MetaDataGenerator $s3MetaDataGenerator): void
     {
-        $s3Client->upload('some-bucket', '7161ef05-httpsmastodon.social', 'testing')
+        $s3MetaDataGenerator->__invoke()->willReturn([]);
+        $s3Client->upload(
+            'some-bucket',
+            '7161ef05-httpsmastodon.social',
+            'testing',
+            'private',
+            ['Metadata' => []]
+        )
             ->shouldBeCalled()
         ;
         $this->store(new PublicTimelineResponse('https://mastodon.social', 'testing'));
     }
 
-    public function it_can_retrieve_a_stored_toot_aggregate(S3Client $s3Client): void
+    public function it_can_retrieve_a_stored_toot_aggregate(S3Client $s3Client, PostRetrieveS3MetadataHook $postRetrieveS3MetadataHook): void
     {
         $key = new S3PublicTimelineResponseKey('7161ef05-httpsmastodon.social');
         $s3Client->getObject(
             ['Bucket' => 'some-bucket', 'Key' => '7161ef05-httpsmastodon.social']
         )
             ->willReturn(
-                ['Body' => '[{ "testing": true }]']
+                ['Body' => '[{ "testing": true }]', 'Metadata' => ['a' => 'b']]
             )
         ;
 
+        $postRetrieveS3MetadataHook->__invoke(['a' => 'b'])->shouldBeCalled();
         $this->retrieveTootStoredAggregate($key)
             ->shouldBeLike(
                 new StoredPublicTimelineResponse(
                     '7161ef05-httpsmastodon.social',
-                    [['testing' => true]]
+                    [['testing' => true]],
                 )
             )
         ;
