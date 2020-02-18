@@ -34,7 +34,7 @@ class XRayFunctionDecoratorSpec extends ObjectBehavior
         $trace->end()->willReturn($trace);
         $trace->begin()->willReturn($trace);
         $trace->submit(Argument::type(DaemonSegmentSubmitter::class))->shouldBeCalled();
-        $trace->begin()->shouldBeCalled();
+        $trace->begin(100)->shouldBeCalled();
         $this->__invoke('anything', $context)->shouldReturn('hello');
     }
 
@@ -52,7 +52,7 @@ class XRayFunctionDecoratorSpec extends ObjectBehavior
             ->willReturn($trace)
         ;
         $trace->end()->willReturn($trace);
-        $trace->begin()->willReturn($trace);
+        $trace->begin(100)->willReturn($trace);
         $trace->submit(Argument::type(DaemonSegmentSubmitter::class))->shouldBeCalled();
 
         $this->shouldThrow(new \Exception($runTimeException->getMessage(), $runTimeException->getCode(), $runTimeException))->during__invoke('anything', $context);

@@ -68,7 +68,7 @@ class XRayFunctionDecorator
             $trace = $this->addRequestMethod($trace);
         }
 
-        $trace->begin();
+        $trace->begin(100);
     }
 
     private function hasRequestUri(): bool
