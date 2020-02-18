@@ -77,10 +77,10 @@ test-php:
 .PHONY: test-frontend
 ## Run the tests frontend
 test-frontend: build-frontend
-	cp frontend/src/aws-exports.js "${TEMP_DIR}/aws-exports.js"
 	( cd frontend && npm run-script test -- --watch=false )
-	frontend/scripts/e2e-with-mocks
-	cp "${TEMP_DIR}/aws-exports.js" frontend/src/aws-exports.js
+	cp frontend/src/aws-exports.js "${TEMP_DIR}/aws-exports.js" \
+	    && frontend/scripts/e2e-with-mocks \
+	    && cp "${TEMP_DIR}/aws-exports.js" frontend/src/aws-exports.js
 
 .PHONY: deploy
 ## Deploy the frontend
