@@ -89,6 +89,8 @@ deploy: deploy-frontend deploy-php
 .PHONY: deploy-frontend
 ## Deploy the frontend
 deploy-frontend:
+	## Cowardly bailing if we're in mock mode
+	bash -c '! grep -q "\"aws_user_files_s3_dangerously_connect_to_http_endpoint_for_testing\": true" frontend/src/aws-exports.js'
 	( cd frontend && amplify publish )
 
 .PHONY: deploy-php
