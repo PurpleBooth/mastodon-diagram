@@ -73,7 +73,7 @@ functions:
       BREF_LOOP_MAX: ${self:custom.brefLoopMax}
     events:
       - schedule:
-          rate: rate(10 minutes)
+          rate: rate(60 minutes)
   countInteractions:
     handler: ./entrypoints/countInteractions.php
     layers:
