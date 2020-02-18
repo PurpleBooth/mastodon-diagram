@@ -4,7 +4,10 @@
         "directories": [
             "src"
         ],
-        "excludes": ["Functions/XRayFunctionDecorator.php"]
+        "excludes": [
+            "Functions/XRayFunctionDecorator.php",
+            "Infrastructure/Services/XRayHttpClient.php"
+        ]
     },
     "phpUnit": {
         "customPath": ".\/vendor\/bin\/phpspec"

@@ -29,6 +29,7 @@
         "bref/bref": "^0.5.14",
         "symfony/http-client": "^5.0",
         "php": "^7.4.1",
-        "pkerrigan/xray": "^1"
+        "pkerrigan/xray": "^1",
+        "ocramius/proxy-manager": "^2.7"
     }
 }

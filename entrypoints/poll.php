@@ -7,6 +7,7 @@ use PurpleBooth\MastodonDiagram\Functions\PollFunction;
 use PurpleBooth\MastodonDiagram\Functions\XRayFunctionDecorator;
 use PurpleBooth\MastodonDiagram\Infrastructure\Services\ApiTootRepository;
 use PurpleBooth\MastodonDiagram\Infrastructure\Services\S3PublicTimelineResponseRepository;
+use PurpleBooth\MastodonDiagram\Infrastructure\Services\XRayHttpClient;
 use Symfony\Component\HttpClient\HttpClient;
 
 require __DIR__.'/../vendor/autoload.php';
@@ -42,6 +43,6 @@ return new XRayFunctionDecorator(
                 ]
             )
         ),
-        new ApiTootRepository($initialHost, (new HttpClient())::create())
+        new ApiTootRepository($initialHost, new XRayHttpClient(HttpClient::create()))
     )
 );
