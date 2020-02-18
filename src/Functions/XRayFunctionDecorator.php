@@ -56,7 +56,7 @@ class XRayFunctionDecorator
     private function startTrace(string $getTraceId): void
     {
         $trace = $this->trace
-            ->setTraceId($getTraceId)
+            ->setTraceHeader($getTraceId)
             ->setName($this->name)
         ;
 

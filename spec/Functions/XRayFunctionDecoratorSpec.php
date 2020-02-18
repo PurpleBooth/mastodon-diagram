@@ -26,7 +26,7 @@ class XRayFunctionDecoratorSpec extends ObjectBehavior
     public function it_should_proxy_through_to_the_contained_function(Trace $trace)
     {
         $context = new Context('unused', 1234, 'unused', 'trace');
-        $trace->setTraceId('trace')->willReturn($trace);
+        $trace->setTraceHeader('trace')->willReturn($trace);
         $trace->setName('name')->willReturn($trace);
         $trace->setFault(false)
             ->willReturn($trace)
@@ -46,7 +46,7 @@ class XRayFunctionDecoratorSpec extends ObjectBehavior
             throw $runTimeException;
         });
 
-        $trace->setTraceId('trace')->willReturn($trace);
+        $trace->setTraceHeader('trace')->willReturn($trace);
         $trace->setName('name')->willReturn($trace);
         $trace->setFault(true)
             ->willReturn($trace)
