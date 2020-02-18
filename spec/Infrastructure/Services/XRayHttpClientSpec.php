@@ -38,6 +38,9 @@ class XRayHttpClientSpec extends ObjectBehavior
             if ('GET' !== $actualJson['http']['request']['method']) {
                 return false;
             }
+            if (true !== $actualJson['traced']) {
+                return false;
+            }
 
             if (407 !== $actualJson['http']['response']['status']) {
                 return false;

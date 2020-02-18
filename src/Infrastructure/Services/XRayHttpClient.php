@@ -49,8 +49,9 @@ class XRayHttpClient implements HttpClientInterface
         $response = $this->httpClient->request($method, $url, $options);
         $segment->end();
         $segment->setResponseCode($response->getStatusCode());
-        $currentSegment = $this->trace->getCurrentSegment();
+        $segment->setTraced(true);
 
+        $currentSegment = $this->trace->getCurrentSegment();
         $currentSegment->addSubsegment($segment);
 
         return $response;
