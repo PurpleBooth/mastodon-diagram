@@ -4,6 +4,7 @@ namespace spec\PurpleBooth\MastodonDiagram\Functions;
 
 use Bref\Context\Context;
 use PhpSpec\ObjectBehavior;
+use Pkerrigan\Xray\Segment;
 use Pkerrigan\Xray\Submission\DaemonSegmentSubmitter;
 use Pkerrigan\Xray\Trace;
 use Prophecy\Argument;
@@ -27,14 +28,24 @@ class XRayFunctionDecoratorSpec extends ObjectBehavior
     {
         $context = new Context('unused', 1234, 'unused', 'trace');
         $trace->setTraceHeader('trace')->willReturn($trace);
-        $trace->setName('name')->willReturn($trace);
-        $trace->setFault(false)
-            ->willReturn($trace)
-        ;
-        $trace->end()->willReturn($trace);
-        $trace->begin()->willReturn($trace);
+        $trace->addSubsegment(Argument::that(function (Segment $subSegment) {
+            $serialised = $subSegment->jsonSerialize();
+
+            if ('name' !== $serialised['name']) {
+                return false;
+            }
+
+            if (!\array_key_exists('start_time', $serialised)) {
+                return false;
+            }
+            if (!\array_key_exists('end_time', $serialised)) {
+                return false;
+            }
+
+            return  true;
+        }))->shouldBeCalled()->willReturn($trace);
+
         $trace->submit(Argument::type(DaemonSegmentSubmitter::class))->shouldBeCalled();
-        $trace->begin(100)->shouldBeCalled();
         $this->__invoke('anything', $context)->shouldReturn('hello');
     }
 
@@ -47,10 +58,28 @@ class XRayFunctionDecoratorSpec extends ObjectBehavior
         });
 
         $trace->setTraceHeader('trace')->willReturn($trace);
-        $trace->setName('name')->willReturn($trace);
-        $trace->setFault(true)
-            ->willReturn($trace)
-        ;
+        $trace->addSubsegment(Argument::that(function (Segment $subSegment) {
+            $serialised = $subSegment->jsonSerialize();
+
+            if ('name' !== $serialised['name']) {
+                return false;
+            }
+
+            if (!\array_key_exists('fault', $serialised)) {
+                return false;
+            }
+            if (true !== $serialised['fault']) {
+                return false;
+            }
+            if (!\array_key_exists('start_time', $serialised)) {
+                return false;
+            }
+            if (!\array_key_exists('end_time', $serialised)) {
+                return false;
+            }
+
+            return true;
+        }))->shouldBeCalled()->willReturn($trace);
         $trace->end()->willReturn($trace);
         $trace->begin(100)->willReturn($trace);
         $trace->submit(Argument::type(DaemonSegmentSubmitter::class))->shouldBeCalled();
