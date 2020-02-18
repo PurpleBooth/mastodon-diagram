@@ -3,8 +3,169 @@ on:
   schedule:
     - cron:  '0 0 * * *'
 jobs:
-  build:
+  lint-php:
+    name: lint-php
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - uses: shivammathur/setup-php@v1
+        with:
+          php-version: '7.4'
+          coverage: none
+      - uses: actions/setup-node@v1
+      - run: sudo wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O /usr/local/bin/php-cs-fixer
+      - run: sudo chmod +x /usr/local/bin/php-cs-fixer
+      - run: composer install -a
+      - run: make lint-php
+  lint-frontend:
     name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - uses: shivammathur/setup-php@v1
+        with:
+          php-version: '7.4'
+          coverage: none
+      - uses: actions/setup-node@v1
+      - uses: nanasess/setup-chromedriver@master
+      - run: npm install -g @angular/cli
+      - run: npm install -g @aws-amplify/cli
+      - run: ( cd frontend && npm ci )
+      - run: make lint-frontend
+  test-php:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - uses: shivammathur/setup-php@v1
+        with:
+          php-version: '7.4'
+          coverage: none
+      - uses: actions/setup-node@v1
+      - uses: nanasess/setup-chromedriver@master
+      - run: sudo wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O /usr/local/bin/php-cs-fixer
+      - run: sudo chmod +x /usr/local/bin/php-cs-fixer
+      - run: composer install -a
+      - run: make test-php
+  test-frontend:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-
+      - uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - uses: shivammathur/setup-php@v1
+        with:
+          php-version: '7.4'
+          coverage: none
+      - uses: actions/setup-node@v1
+      - uses: nanasess/setup-chromedriver@master
+      - run: sudo wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O /usr/local/bin/php-cs-fixer
+      - run: sudo chmod +x /usr/local/bin/php-cs-fixer
+      - run: npm install -g @angular/cli
+      - run: npm install -g @aws-amplify/cli
+      - name: aws configure
+        env:
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
+        run: |
+          curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip"
+          unzip awscli-bundle.zip
+          sudo ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+          aws configure set aws_access_key_id "$AWS_ACCESS_KEY"
+          aws configure set aws_secret_access_key "$AWS_SECRET_ACCESS_KEY"
+          aws configure set default.region "$AWS_DEFAULT_REGION"
+      - run: ( cd frontend && npm ci )
+      - name: amplify init && amplify push
+        run: |
+          (
+            cd frontend
+            amplify init --yes \
+                         --amplify '{ "envName": "production" }' \
+                         --providers '{
+                              "amplify-provider-awscloudformation": { \
+                                "useProfile": true,
+                                "profileName": "default"  \
+                              } \
+                            }'
+            amplify push
+          )
+      - name: make test-frontend
+        run: |
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
+          make test-frontend
+  deploy:
+    name: deploy
+    needs:
+      - lint-php
+      - lint-frontend
+      - test-php
+      - test-frontend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -62,13 +223,6 @@ jobs:
                             }'
             amplify push
           )
-      - run: make lint
-      - name: make test
-        run: |
-          export DISPLAY=:99
-          chromedriver --url-base=/wd/hub &
-          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
-          make test
       - run: |
           make clean build deploy
         if: github.ref == 'refs/heads/master'
