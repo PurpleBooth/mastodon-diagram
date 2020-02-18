@@ -4,7 +4,6 @@ namespace PurpleBooth\MastodonDiagram\Functions;
 
 use Bref\Context\Context;
 use Exception;
-use Pkerrigan\Xray\HttpSegment;
 use Pkerrigan\Xray\Submission\DaemonSegmentSubmitter;
 use Pkerrigan\Xray\Trace;
 
