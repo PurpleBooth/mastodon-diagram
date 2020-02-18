@@ -25,7 +25,8 @@ class CountInteractionsS3Handler extends S3Handler
             ($this->countInteractionsFunction)(
                 new S3PublicTimelineResponseKey(
                     $record->getObject()->getKey()
-                )
+                ),
+                $context
             );
         }
     }

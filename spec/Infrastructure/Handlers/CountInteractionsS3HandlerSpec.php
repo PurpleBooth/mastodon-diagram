@@ -54,8 +54,8 @@ class CountInteractionsS3HandlerSpec extends ObjectBehavior
             ]
         );
         $context = new Context('id', 10000, 'unused', 'unused');
-        $countInteractionsFunction->__invoke(new S3PublicTimelineResponseKey('Record 1'))->shouldBeCalled();
-        $countInteractionsFunction->__invoke(new S3PublicTimelineResponseKey('Record 2'))->shouldBeCalled();
+        $countInteractionsFunction->__invoke(new S3PublicTimelineResponseKey('Record 1'), $context)->shouldBeCalled();
+        $countInteractionsFunction->__invoke(new S3PublicTimelineResponseKey('Record 2'), $context)->shouldBeCalled();
         $this->handleS3($handler, $context);
     }
 }
