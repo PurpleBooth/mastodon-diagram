@@ -37,25 +37,21 @@ class XRayHttpClient implements HttpClientInterface
      */
     public function request(string $method, string $url, array $options = []): ResponseInterface
     {
-        $segment = new HttpSegment();
-        $segment->setUrl($url);
-        $segment->setMethod($method);
+        $segment = (new HttpSegment())
+            ->setUrl($url)
+            ->setMethod($method)
+            ->begin();
 
         Trace::getInstance()
             ->getCurrentSegment()
             ->addSubsegment(
-                $segment->begin()
-            )
-        ;
+                $segment
+            );
 
         $response = $this->httpClient->request($method, $url, $options);
 
-        $segment->setResponseCode($response->getStatusCode());
-
-        Trace::getInstance()
-            ->getCurrentSegment()
-            ->end()
-        ;
+        $segment->setResponseCode($response->getStatusCode())
+            ->end();
 
         return $response;
     }
@@ -64,7 +60,7 @@ class XRayHttpClient implements HttpClientInterface
      * Yields responses chunk by chunk as they complete.
      *
      * @param iterable|ResponseInterface|ResponseInterface[] $responses One or more responses created by the current HTTP client
-     * @param null|float                                     $timeout   The idle timeout before yielding timeout chunks
+     * @param null|float $timeout The idle timeout before yielding timeout chunks
      */
     public function stream($responses, float $timeout = null): ResponseStreamInterface
     {
