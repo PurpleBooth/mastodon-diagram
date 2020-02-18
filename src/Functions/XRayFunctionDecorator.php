@@ -36,7 +36,7 @@ class XRayFunctionDecorator
      */
     public function __invoke($event, Context $context): ?string
     {
-        echo $context->getTraceId();
+        printf("Hmmm %s\n", $context->getTraceId());
         $this->startTrace($context->getTraceId());
         $errorState = null;
         $rethrownException = null;
