@@ -71,6 +71,9 @@ functions:
       RESPONSE_BUCKET: ${self:custom.responsesBucket}
       INITIAL_URL: ${self:custom.initialUrl}
       BREF_LOOP_MAX: ${self:custom.brefLoopMax}
+    events:
+      - schedule:
+          rate: rate(10 minutes)
   countInteractions:
     handler: ./entrypoints/countInteractions.php
     layers:
