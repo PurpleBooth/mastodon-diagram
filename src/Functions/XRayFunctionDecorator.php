@@ -2,6 +2,7 @@
 
 namespace PurpleBooth\MastodonDiagram\Functions;
 
+use Bref\Context\Context;
 use Exception;
 use Pkerrigan\Xray\Submission\DaemonSegmentSubmitter;
 use Pkerrigan\Xray\Trace;
@@ -29,16 +30,18 @@ class XRayFunctionDecorator
     }
 
     /**
-     * @param array<mixed> ...$args
+     * @param mixed $event
+     *
+     * @throws Exception
      */
-    public function __invoke(...$args): ?string
+    public function __invoke($event, Context $context): ?string
     {
-        $this->startTrace();
+        $this->startTrace($context->getTraceId());
         $errorState = null;
         $rethrownException = null;
 
         try {
-            $results = ($this->function)(...$args);
+            $results = ($this->function)($event, $context);
         } catch (Exception $exception) {
             $this->endTrace(true);
 
@@ -50,10 +53,10 @@ class XRayFunctionDecorator
         return $results;
     }
 
-    private function startTrace(): void
+    private function startTrace(string $getTraceId): void
     {
         $trace = $this->trace
-            ->setTraceHeader($this->getTraceId())
+            ->setTraceHeader($getTraceId)
             ->setName($this->name)
         ;
 
@@ -66,13 +69,6 @@ class XRayFunctionDecorator
         }
 
         $trace->begin();
-    }
-
-    private function getTraceId(): ?string
-    {
-        $traceId = $_SERVER['HTTP_X_AMZN_TRACE_ID'] ?? null;
-
-        return $traceId;
     }
 
     private function hasRequestUri(): bool
