@@ -4,7 +4,6 @@ on:
     - cron:  '0 0 * * *'
 jobs:
   lint-php:
-    name: lint-php
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -34,7 +33,6 @@ jobs:
       - run: composer install -a
       - run: make lint-php
   lint-frontend:
-    name: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -65,7 +63,6 @@ jobs:
       - run: ( cd frontend && npm ci )
       - run: make lint-frontend
   test-php:
-    name: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -96,7 +93,6 @@ jobs:
       - run: composer install -a
       - run: make test-php
   test-frontend:
-    name: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -160,7 +156,6 @@ jobs:
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
           make test-frontend
   deploy:
-    name: deploy
     needs:
       - lint-php
       - lint-frontend
