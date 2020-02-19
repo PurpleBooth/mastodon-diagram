@@ -37,7 +37,7 @@
     "@angular/cli": "^9.0.2",
     "@angular/compiler-cli": "https://621158-24195339-gh.circle-artifacts.com/0/angular/compiler-cli-pr35191-b93c5372e9.tgz",
     "@angular/language-service": "https://621158-24195339-gh.circle-artifacts.com/0/angular/language-service-pr35191-b93c5372e9.tgz",
-    "@aws-amplify/cli": "^4.13.3",
+    "@aws-amplify/cli": "^4.13.4",
     "@types/jasmine": "^3.5.0",
     "@types/jasminewd2": "^2.0.3",
     "@types/node": "^13.7.1",
