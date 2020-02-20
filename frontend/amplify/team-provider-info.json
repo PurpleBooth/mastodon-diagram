@@ -9,7 +9,7 @@
             "UnauthRoleName": "amplify-mastodon-diagram-production-212127-unauthRole",
             "StackName": "amplify-mastodon-diagram-production-212127",
             "StackId": "arn:aws:cloudformation:us-east-1:654281046572:stack/amplify-mastodon-diagram-production-212127/c0c5c420-5030-11ea-a93c-0abd62a7624a",
-            "AmplifyAppId": "d1oso2w0sq4bxb"
+            "AmplifyAppId": "d3w40r979joltc"
         },
         "categories": {
             "auth": {
