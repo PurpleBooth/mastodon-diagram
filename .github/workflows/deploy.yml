@@ -139,7 +139,8 @@ jobs:
         run: |
           (
             cd frontend
-            amplify init --yes \
+            amplify init --appId d3w40r979joltc \
+                         --yes \
                          --amplify '{ "envName": "production" }' \
                          --providers '{
                               "amplify-provider-awscloudformation": { \
@@ -208,7 +209,8 @@ jobs:
         run: |
           (
             cd frontend
-            amplify init --yes \
+            amplify init --appId d3w40r979joltc \
+                         --yes \
                          --amplify '{ "envName": "production" }' \
                          --providers '{
                               "amplify-provider-awscloudformation": { \
