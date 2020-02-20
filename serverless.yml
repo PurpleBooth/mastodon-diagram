@@ -63,6 +63,7 @@ plugins:
 
 functions:
   poll:
+    reservedConcurrency: 1
     handler: ./entrypoints/poll.php
     layers:
       - ${bref:layer.php-74}
@@ -75,6 +76,7 @@ functions:
       - schedule:
           rate: rate(60 minutes)
   countInteractions:
+    reservedConcurrency: 1
     handler: ./entrypoints/countInteractions.php
     layers:
       - ${bref:layer.php-74}
