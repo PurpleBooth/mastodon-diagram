@@ -221,5 +221,5 @@ jobs:
             amplify push
           )
       - run: |
-          make -j"$(nproc)" clean build deploy
+          make clean build deploy
         if: github.ref == 'refs/heads/master'
