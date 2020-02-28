@@ -29,7 +29,7 @@
     "cp-cli": "^2.0.0",
     "ng2-charts": "^2.3.0",
     "rxjs": "^6.5.4",
-    "tslib": "^1.11.0",
+    "tslib": "^1.11.1",
     "zone.js": "https://621158-24195339-gh.circle-artifacts.com/0/zone.js/zone.js-pr35191-b93c5372e9.tgz"
   },
   "devDependencies": {
