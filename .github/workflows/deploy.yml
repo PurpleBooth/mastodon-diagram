@@ -4,6 +4,7 @@ on:
     - cron:  '0 0 * * *'
 jobs:
   lint-php:
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -33,6 +34,7 @@ jobs:
       - run: composer install -a
       - run: make -j"$(nproc)" lint-php
   lint-frontend:
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -63,6 +65,7 @@ jobs:
       - run: ( cd frontend && npm ci )
       - run: make -j"$(nproc)" lint-frontend
   test-php:
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -93,6 +96,7 @@ jobs:
       - run: composer install -a
       - run: make -j"$(nproc)" test-php
   test-frontend:
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -157,6 +161,7 @@ jobs:
           sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
           make -j"$(nproc)" test-frontend
   deploy:
+    timeout-minutes: 20
     needs:
       - lint-php
       - lint-frontend
