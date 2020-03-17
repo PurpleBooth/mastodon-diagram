@@ -30,6 +30,7 @@
         "symfony/http-client": "^5.0",
         "php": "^7.4.1",
         "pkerrigan/xray": "^1",
-        "ocramius/proxy-manager": "^2.7"
+        "ocramius/proxy-manager": "^2.7",
+        "aws/aws-sdk-php": "^3.133"
     }
 }
