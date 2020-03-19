@@ -232,7 +232,7 @@ jobs:
           git config --local user.name "GitHub Action"
           git add .
           if [ -n "$(git status --porcelain)" ] && npm run lint; then
-            git commit -m "[Automated] Fix Linting Problems"
+            git commit -m "[Automated] Fix NPM Audit Problems"
           fi
       - name: Push changes
         uses: ad-m/github-push-action@master
