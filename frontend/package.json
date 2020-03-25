@@ -22,7 +22,7 @@
     "@angular/platform-browser": "https://621158-24195339-gh.circle-artifacts.com/0/angular/platform-browser-pr35191-b93c5372e9.tgz",
     "@angular/platform-browser-dynamic": "https://621158-24195339-gh.circle-artifacts.com/0/angular/platform-browser-dynamic-pr35191-b93c5372e9.tgz",
     "@angular/router": "https://621158-24195339-gh.circle-artifacts.com/0/angular/router-pr35191-b93c5372e9.tgz",
-    "aws-amplify": "^2.2.6",
+    "aws-amplify": "^2.2.7",
     "aws-amplify-angular": "^4.1.8",
     "chart.js": "^2.9.3",
     "cors": "~2.8.4",
